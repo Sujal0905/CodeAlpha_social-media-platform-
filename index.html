@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialConnect - Mini Social Media</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login/Register Modal -->
+    <div id="auth-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="auth-title">Welcome to SocialConnect</h2>
+                <button class="modal-close" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="auth-form">
+                    <div class="form-group">
+                        <label class="form-label" for="auth-username">Username</label>
+                        <input type="text" class="form-control" id="auth-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="auth-password">Password</label>
+                        <input type="password" class="form-control" id="auth-password" required>
+                    </div>
+                    <div class="form-group hidden" id="bio-group">
+                        <label class="form-label" for="auth-bio">Bio</label>
+                        <textarea class="form-control" id="auth-bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width" id="auth-submit">Sign In</button>
+                </form>
+                <div class="auth-switch">
+                    <p id="auth-switch-text">Don't have an account? <button class="link-btn" id="auth-switch-btn">Sign Up</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="hidden">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <h1>SocialConnect</h1>
+                </div>
+                <div class="nav-search">
+                    <input type="text" class="form-control search-input" id="user-search" placeholder="Search users...">
+                    <div id="search-results" class="search-results hidden"></div>
+                </div>
+                <div class="nav-user">
+                    <button class="btn btn--outline" id="logout-btn">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="app-layout">
+            <!-- Side Navigation -->
+            <aside class="side-nav">
+                <nav class="nav-menu">
+                    <button class="nav-item active" data-page="feed">🏠 Home</button>
+                    <button class="nav-item" data-page="discover">🔍 Discover</button>
+                    <button class="nav-item" data-page="profile">👤 Profile</button>
+                </nav>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Feed Page -->
+                <div id="feed-page" class="page active">
+                    <div class="page-header">
+                        <h2>Home Feed</h2>
+                        <button class="btn btn--primary" id="compose-btn">Create Post</button>
+                    </div>
+                    
+                    <!-- Compose Form -->
+                    <div id="compose-form" class="compose-container hidden">
+                        <div class="card">
+                            <div class="card__body">
+                                <form id="post-form">
+                                    <div class="form-group">
+                                        <textarea class="form-control compose-textarea" id="post-content" placeholder="What's on your mind?" maxlength="280" required></textarea>
+                                        <div class="compose-footer">
+                                            <span class="character-count">280</span>
+                                            <div class="compose-actions">
+                                                <button type="button" class="btn btn--outline" id="cancel-post">Cancel</button>
+                                                <button type="submit" class="btn btn--primary">Post</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Posts Container -->
+                    <div id="feed-posts" class="posts-container"></div>
+                </div>
+
+                <!-- Discover Page -->
+                <div id="discover-page" class="page">
+                    <div class="page-header">
+                        <h2>Discover</h2>
+                    </div>
+                    <div id="discover-posts" class="posts-container"></div>
+                </div>
+
+                <!-- Profile Page -->
+                <div id="profile-page" class="page">
+                    <div class="profile-container">
+                        <div class="profile-header card">
+                            <div class="card__body">
+                                <div class="profile-info">
+                                    <div class="profile-avatar">
+                                        <img id="profile-avatar" src="" alt="Profile Avatar" class="avatar-large">
+                                    </div>
+                                    <div class="profile-details">
+                                        <h2 id="profile-username"></h2>
+                                        <p id="profile-bio"></p>
+                                        <div class="profile-stats">
+                                            <span><strong id="profile-following-count">0</strong> Following</span>
+                                            <span><strong id="profile-followers-count">0</strong> Followers</span>
+                                        </div>
+                                        <div class="profile-actions">
+                                            <button id="edit-profile-btn" class="btn btn--outline hidden">Edit Profile</button>
+                                            <button id="follow-btn" class="btn btn--primary hidden">Follow</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Edit Form -->
+                        <div id="edit-profile-form" class="card hidden">
+                            <div class="card__body">
+                                <h3>Edit Profile</h3>
+                                <form id="profile-edit-form">
+                                    <div class="form-group">
+                                        <label class="form-label" for="edit-bio">Bio</label>
+                                        <textarea class="form-control" id="edit-bio" rows="4"></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn--outline" id="cancel-edit">Cancel</button>
+                                        <button type="submit" class="btn btn--primary">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div id="profile-posts" class="posts-container"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Post Template -->
+    <template id="post-template">
+        <article class="post card">
+            <div class="card__body">
+                <div class="post-header">
+                    <div class="post-author">
+                        <img class="post-avatar" src="" alt="Avatar">
+                        <div class="post-meta">
+                            <h4 class="post-username"></h4>
+                            <time class="post-time"></time>
+                        </div>
+                    </div>
+                    <button class="post-delete hidden">🗑️</button>
+                </div>
+                <div class="post-content">
+                    <p class="post-text"></p>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn like-btn">
+                        <span class="like-icon">🤍</span>
+                        <span class="like-count">0</span>
+                    </button>
+                    <button class="action-btn comment-btn">
+                        <span>💬</span>
+                        <span class="comment-count">0</span>
+                    </button>
+                </div>
+                <div class="comments-section hidden">
+                    <div class="comments-list"></div>
+                    <form class="comment-form">
+                        <div class="comment-input-group">
+                            <input type="text" class="form-control comment-input" placeholder="Add a comment..." required>
+                            <button type="submit" class="btn btn--primary btn--sm">Post</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <!-- Comment Template -->
+    <template id="comment-template">
+        <div class="comment">
+            <div class="comment-header">
+                <img class="comment-avatar" src="" alt="Avatar">
+                <h5 class="comment-username"></h5>
+                <time class="comment-time"></time>
+                <button class="comment-delete hidden">🗑️</button>
+            </div>
+            <p class="comment-text"></p>
+        </div>
+    </template>
+
+    <script src="app.js"></script>
+</body>
+</html>
